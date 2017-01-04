@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import xoauth2 from 'xoauth2';
 
 let from, transporter;
 
@@ -10,20 +11,44 @@ function validate(args, props) {
   });
 }
 
+function _init(args) {
+  if (transporter) {
+    throw new Error('gmailer has already been initialized!');
+  }
+
+  validate(args, ['name', 'email']);
+
+  from = `${args.name}<${args.email}>`;
+}
+
 const gmailer = {
   init(args) {
-    if (transporter) {
-      throw new Error('gmailer has already been initialized!');
-    }
+    _init(args);
+    validate(args, ['password']);
 
-    validate(args, ['name', 'email', 'password']);
-
-    from = `${args.name}<${args.email}>`;
     transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      service: 'gmail',
       auth: {
         user: args.email,
         pass: args.password
+      }
+    });
+  },
+
+  initOAuth(args) {
+    _init(args);
+    validate(args, ['clientId', 'clientSecret', 'refreshToken', 'accessToken']);
+
+    transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        xoauth2: xoauth2.createXOAuth2Generator({
+            user: args.email,
+            clientId: args.clientId,
+            clientSecret: args.clientSecret,
+            refreshToken: args.refreshToken,
+            accessToken: args.accessToken
+        })
       }
     });
   },
