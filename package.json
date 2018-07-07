@@ -1,6 +1,6 @@
 {
   "name": "@rajatsehgal/gmailer",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A module that provides the capability to send emails through a gmail account.",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,7 @@
   "license": "ISC",
   "homepage": "https://github.com/rajatsehgal/gmailer",
   "dependencies": {
-    "nodemailer": "^2.3.0",
+    "nodemailer": "^4.6.7",
     "xoauth2": "^1.2.0"
   }
 }
